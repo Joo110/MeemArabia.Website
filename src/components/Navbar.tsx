@@ -38,8 +38,7 @@ export default function Navbar() {
               <a
                 key={item.href}
                 href={item.href}
-                className="px-4 py-2 text-sm text-ink/80 hover:text-ink rounded-lg hover:bg-ink/5 transition-colors"
-              >
+className="px-4 py-2 text-lg font-medium text-ink/80 hover:text-ink rounded-lg hover:bg-ink/5 transition-colors"              >
                 {item.label}
               </a>
             ))}

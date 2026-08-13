@@ -114,14 +114,13 @@ export const growthPath = [
 
 export const ecosystemNodes = [
   { key: 'hr', label: 'الموارد البشرية', icon: 'users', angle: -90 },
-  { key: 'payroll', label: 'الرواتب', icon: 'wallet', angle: -30 },
-  { key: 'finance', label: 'المالية', icon: 'bar-chart', angle: 30 },
-  { key: 'pos', label: 'نقاط البيع', icon: 'store', angle: 90 },
-  { key: 'sales', label: 'المبيعات', icon: 'shopping-cart', angle: 150 },
-  { key: 'inventory', label: 'المخزون', icon: 'boxes', angle: 210 },
-  { key: 'reports', label: 'التقارير', icon: 'clipboard', angle: 270 },
+  { key: 'payroll', label: 'الرواتب', icon: 'wallet', angle: -38.57 },
+  { key: 'finance', label: 'المالية', icon: 'bar-chart', angle: 12.86 },
+  { key: 'pos', label: 'نقاط البيع', icon: 'store', angle: 64.29 },
+  { key: 'sales', label: 'المبيعات', icon: 'shopping-cart', angle: 115.71 },
+  { key: 'inventory', label: 'المخزون', icon: 'boxes', angle: 167.14 },
+  { key: 'reports', label: 'التقارير', icon: 'clipboard', angle: 218.57 },
 ] as const;
-
 export const integrations = [
   {
     name: 'قوى',

@@ -1,11 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2, Send, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, MessageCircle } from 'lucide-react';
 import Reveal, { RevealStagger, staggerItemFadeX } from './Reveal';
 import { companySizes, interestedIn, integrationReqs, deploymentPref } from '../data/content';
 
-// TODO: حط رابط الـ Formspree بتاعك هنا بعد ما تعمل الحساب
-const FORMSPREE_URL = 'https://formspree.io/f/xxxxxxx';
+const WHATSAPP_NUMBER = '966566817575';
 
 function ChipGroup({
   options,
@@ -48,47 +47,48 @@ export default function ContactForm() {
   const [integrationsSel, setIntegrationsSel] = useState<string[]>([]);
   const [deployment, setDeployment] = useState<string>('');
   const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const toggle = (list: string[], setList: (v: string[]) => void, val: string) => {
     setList(list.includes(val) ? list.filter((x) => x !== val) : [...list, val]);
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
-    setSubmitting(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    // إضافة الحقول اللي مش inputs عادية (الـ chips والاختيارات)
-    formData.append('مهتم بـ', interests.join('، ') || 'لم يحدد');
-    formData.append('متطلبات التكامل', integrationsSel.join('، ') || 'لم يحدد');
-    formData.append('تفضيل بيئة التشغيل', deployment || 'لم يحدد');
+    const name = formData.get('الاسم الكامل') as string;
+    const company = formData.get('اسم الشركة') as string;
+    const email = formData.get('البريد الإلكتروني') as string;
+    const phone = formData.get('رقم الجوال') as string;
+    const companySize = formData.get('حجم الشركة') as string;
+    const details = formData.get('تفاصيل المشروع') as string;
 
-    try {
-      const response = await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        body: formData,
-        headers: { Accept: 'application/json' },
-      });
+    const lines = [
+      'طلب استشارة جديد من الموقع',
+      '',
+      `الاسم: ${name || '—'}`,
+      `الشركة: ${company || '—'}`,
+      `البريد الإلكتروني: ${email || '—'}`,
+      `رقم الجوال: ${phone || '—'}`,
+      companySize ? `حجم الشركة: ${companySize}` : null,
+      `مهتم بـ: ${interests.length ? interests.join('، ') : 'لم يحدد'}`,
+      `متطلبات التكامل: ${integrationsSel.length ? integrationsSel.join('، ') : 'لم يحدد'}`,
+      deployment ? `تفضيل بيئة التشغيل: ${deployment}` : null,
+      details ? `تفاصيل المشروع: ${details}` : null,
+    ].filter(Boolean);
 
-      if (response.ok) {
-        setSubmitted(true);
-        form.reset();
-        setInterests([]);
-        setIntegrationsSel([]);
-        setDeployment('');
-      } else {
-        setError('حدث خطأ أثناء الإرسال. برجاء المحاولة مرة أخرى.');
-      }
-    } catch {
-      setError('تعذر الاتصال بالسيرفر. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.');
-    } finally {
-      setSubmitting(false);
-    }
+    const message = encodeURIComponent(lines.join('\n'));
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+
+    setSubmitted(true);
+    form.reset();
+    setInterests([]);
+    setIntegrationsSel([]);
+    setDeployment('');
   };
 
   return (
@@ -118,13 +118,7 @@ export default function ContactForm() {
                   transition={{ type: 'spring', stiffness: 260, damping: 14, delay: 0.1 }}
                   className="flex h-16 w-16 items-center justify-center rounded-full bg-teal/10 text-teal"
                 >
-                  <motion.div
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                  >
-                    <CheckCircle2 size={32} />
-                  </motion.div>
+                  <CheckCircle2 size={32} />
                 </motion.div>
                 <motion.h3
                   initial={{ opacity: 0, y: 8 }}
@@ -132,7 +126,7 @@ export default function ContactForm() {
                   transition={{ delay: 0.35 }}
                   className="mt-5 text-xl font-bold text-ink"
                 >
-                  تم استلام طلبك
+                  جاري فتح واتساب
                 </motion.h3>
                 <motion.p
                   initial={{ opacity: 0, y: 8 }}
@@ -140,8 +134,17 @@ export default function ContactForm() {
                   transition={{ delay: 0.45 }}
                   className="mt-2 max-w-sm text-sm text-muted"
                 >
-                  شكرًا لتواصلك معنا. سيقوم فريق ميم العربية بمراجعة التفاصيل والتواصل معك قريبًا.
+                  تم تجهيز رسالتك، أكمل الإرسال من واتساب وسيتواصل معك فريق ميم العربية في أقرب وقت.
                 </motion.p>
+                <motion.button
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55 }}
+                  onClick={() => setSubmitted(false)}
+                  className="mt-6 text-sm font-semibold text-teal hover:underline"
+                >
+                  إرسال طلب آخر
+                </motion.button>
               </motion.div>
             ) : (
               <motion.form
@@ -237,42 +240,19 @@ export default function ContactForm() {
                   />
                 </Field>
 
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600"
-                  >
-                    <AlertCircle size={16} />
-                    {error}
-                  </motion.div>
-                )}
-
                 <motion.button
                   type="submit"
-                  disabled={submitting}
-                  whileHover={!submitting ? { scale: 1.02, boxShadow: '0 14px 30px rgba(47,93,255,0.32)' } : {}}
-                  whileTap={!submitting ? { scale: 0.97 } : {}}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl gradient-brand px-6 py-4 text-sm font-bold text-white shadow-lg shadow-blue/20 sm:w-auto disabled:opacity-70"
+                  whileHover={{ scale: 1.02, boxShadow: '0 14px 30px rgba(37,211,102,0.3)' }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-4 text-sm font-bold text-white shadow-lg sm:w-auto"
                 >
-                  {submitting ? (
-                    <>
-                      جاري الإرسال...
-                      <motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}>
-                        <Loader2 size={16} />
-                      </motion.span>
-                    </>
-                  ) : (
-                    <>
-                      طلب استشارة
-                      <motion.span
-                        animate={{ x: [0, 3, 0] }}
-                        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                      >
-                        <Send size={16} />
-                      </motion.span>
-                    </>
-                  )}
+                  إرسال عبر واتساب
+                  <motion.span
+                    animate={{ x: [0, 3, 0] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <MessageCircle size={16} />
+                  </motion.span>
                 </motion.button>
               </motion.form>
             )}

@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion, useMotionValue, useSpring, useInView, animate } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
 import Reveal, { magneticProps } from './Reveal';
 import { heroStats } from '../data/content';
@@ -22,8 +22,70 @@ const bubbles = [
   { left: 65, top: 5, size: 16, baseOpacity: 0.5, duration: 8.8, delay: 1.4, drift: 19 },
   { left: 96, top: 34, size: 12, baseOpacity: 0.6, duration: 7.2, delay: 0.4, drift: 23 },
 ];
+
+// Word-by-word reveal for paragraph text
+function WordsReveal({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
+  const words = text.split(' ');
+  return (
+    <motion.p
+      className={className}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.5 }}
+      transition={{ staggerChildren: 0.025, delayChildren: delay }}
+    >
+      {words.map((w, i) => (
+        <motion.span
+          key={i}
+          className="inline-block"
+          variants={{ hidden: { opacity: 0, y: 8, filter: 'blur(4px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)' } }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {w}&nbsp;
+        </motion.span>
+      ))}
+    </motion.p>
+  );
+}
+
+// Animated count-up number
+function CountUp({ value, className }: { value: string; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const [display, setDisplay] = useState('0');
+
+  // Extract leading numeric part and keep trailing suffix (م, +, %, etc.)
+  const match = value.match(/^([\d.,]+)(.*)$/);
+  const numeric = match ? parseFloat(match[1].replace(/,/g, '')) : null;
+  const suffix = match ? match[2] : '';
+  const isDecimal = match ? match[1].includes('.') : false;
+
+  useEffect(() => {
+    if (!inView) return;
+    if (numeric === null) {
+      setDisplay(value);
+      return;
+    }
+    const controls = animate(0, numeric, {
+      duration: 1.4,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate(v) {
+        setDisplay(isDecimal ? v.toFixed(1) : Math.round(v).toLocaleString('en-US'));
+      },
+    });
+    return () => controls.stop();
+  }, [inView, numeric, isDecimal, value]);
+
+  return (
+    <div ref={ref} className={className}>
+      {numeric === null ? value : `${display}${suffix}`}
+    </div>
+  );
+}
+
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const dashboardRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -35,43 +97,65 @@ export default function Hero() {
   const orbSlowY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -40]);
   const orbFastY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 80]);
 
+  // Mouse-tilt (3D) for the dashboard mock
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const springTiltX = useSpring(tiltX, { stiffness: 150, damping: 20, mass: 0.5 });
+  const springTiltY = useSpring(tiltY, { stiffness: 150, damping: 20, mass: 0.5 });
+  const rotateX = useTransform(springTiltY, [-0.5, 0.5], [7, -7]);
+  const rotateY = useTransform(springTiltX, [-0.5, 0.5], [-7, 7]);
+  const glareX = useTransform(springTiltX, [-0.5, 0.5], ['0%', '100%']);
+  const glareY = useTransform(springTiltY, [-0.5, 0.5], ['0%', '100%']);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduceMotion || !dashboardRef.current) return;
+    const rect = dashboardRef.current.getBoundingClientRect();
+    tiltX.set((e.clientX - rect.left) / rect.width - 0.5);
+    tiltY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const handleMouseLeave = () => {
+    tiltX.set(0);
+    tiltY.set(0);
+  };
+
   return (
     <section
       ref={sectionRef}
       id="home"
       className="relative pt-32 pb-20 lg:pt-44 lg:pb-28 overflow-hidden bg-grid"
     >
-  {/* floating bubbles */}
-<div className="pointer-events-none absolute inset-0 overflow-hidden">
-  {bubbles.map((b, i) => (
-    <motion.div
-      key={i}
-      className="absolute rounded-full"
-      style={{
-        left: `${b.left}%`,
-        top: `${b.top}%`,
-        width: b.size,
-        height: b.size,
-        border: '1.5px solid rgba(20,184,166,0.5)',
-      }}
-      animate={
-        reduceMotion
-          ? { opacity: b.baseOpacity }
-          : {
-              y: [0, -b.drift, 0],
-              x: [0, b.drift / 2, 0],
-              opacity: [b.baseOpacity * 0.6, b.baseOpacity, b.baseOpacity * 0.6],
+      {/* floating bubbles */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {bubbles.map((b, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: `${b.left}%`,
+              top: `${b.top}%`,
+              width: b.size,
+              height: b.size,
+              border: '1.5px solid rgba(20,184,166,0.5)',
+            }}
+            animate={
+              reduceMotion
+                ? { opacity: b.baseOpacity }
+                : {
+                    y: [0, -b.drift, 0],
+                    x: [0, b.drift / 2, 0],
+                    opacity: [b.baseOpacity * 0.6, b.baseOpacity, b.baseOpacity * 0.6],
+                  }
             }
-      }
-      transition={{
-        duration: b.duration,
-        repeat: reduceMotion ? 0 : Infinity,
-        ease: 'easeInOut',
-        delay: b.delay,
-      }}
-    />
-  ))}
-</div>
+            transition={{
+              duration: b.duration,
+              repeat: reduceMotion ? 0 : Infinity,
+              ease: 'easeInOut',
+              delay: b.delay,
+            }}
+          />
+        ))}
+      </div>
+
       {/* ambient orbs — different scroll speeds for gentle parallax */}
       <motion.div
         style={{ y: orbSlowY }}
@@ -96,10 +180,14 @@ export default function Hero() {
       <motion.div
         style={{ y: orbSlowY }}
         className="pointer-events-none absolute top-40 right-10 h-64 w-64 rounded-full bg-teal/10 blur-3xl"
+        animate={reduceMotion ? undefined : { scale: [1, 1.15, 1], opacity: [0.6, 0.9, 0.6] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
         style={{ y: orbFastY }}
         className="pointer-events-none absolute bottom-0 left-10 h-72 w-72 rounded-full bg-blue/10 blur-3xl"
+        animate={reduceMotion ? undefined : { scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       />
 
       <div className="relative mx-auto max-w-7xl px-4">
@@ -107,8 +195,13 @@ export default function Hero() {
           <Reveal variant="scale" duration={0.5}>
             <motion.span
               className="inline-flex items-center gap-2 rounded-full glass-card px-4 py-1.5 text-xs font-medium text-ink/70 shadow-sm"
+              whileHover={{ scale: 1.05 }}
             >
-              <span className="h-1.5 w-1.5 rounded-full gradient-brand animate-pulse" />
+              <motion.span
+                className="h-1.5 w-1.5 rounded-full gradient-brand"
+                animate={reduceMotion ? undefined : { scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+              />
               Technology Built Around Your Business
             </motion.span>
           </Reveal>
@@ -151,13 +244,11 @@ export default function Hero() {
             </motion.h1>
           </div>
 
-          <Reveal delay={0.3} variant="fade">
-            <p className="mt-6 text-base lg:text-lg text-muted leading-relaxed">
-              نبني حلولًا لإدارة الموارد البشرية، والعمليات المالية، والمبيعات، والفروع، والمخزون،
-              وقابلية التكامل مع الجهات والمنصات ذات العلاقة وفق المتطلبات الفنية والتنظيمية
-              والاعتمادات المتاحة لكل خدمة.
-            </p>
-          </Reveal>
+          <WordsReveal
+            text="نبني حلولًا لإدارة الموارد البشرية، والعمليات المالية، والمبيعات، والفروع، والمخزون، وقابلية التكامل مع الجهات والمنصات ذات العلاقة وفق المتطلبات الفنية والتنظيمية والاعتمادات المتاحة لكل خدمة."
+            className="mt-6 text-base lg:text-lg text-muted leading-relaxed"
+            delay={0.3}
+          />
 
           <Reveal delay={0.42} variant="spring">
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -189,92 +280,115 @@ export default function Hero() {
           </Reveal>
         </div>
 
-        {/* dashboard mock */}
+        {/* dashboard mock — with 3D mouse-tilt */}
         <Reveal delay={0.3} variant="blurUp" y={40} className="mt-16" amount={0.15}>
-          <motion.div
-            style={{ y: dashboardY }}
-            className="relative mx-auto max-w-4xl rounded-2xl border border-line bg-ink shadow-2xl shadow-ink/20"
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          >
-            <div className="flex items-center gap-1.5 rounded-t-2xl border-b border-white/10 px-4 py-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
-              <span className="mx-auto num text-[11px] text-white/40">app.meemarabia.sa</span>
-            </div>
+          <div style={{ perspective: 1400 }}>
+            <motion.div
+              ref={dashboardRef}
+              style={{
+                y: dashboardY,
+                rotateX: reduceMotion ? 0 : rotateX,
+                rotateY: reduceMotion ? 0 : rotateY,
+                transformStyle: 'preserve-3d',
+              }}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="relative mx-auto max-w-4xl rounded-2xl border border-line bg-ink shadow-2xl shadow-ink/20"
+              whileHover={{ y: -4 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            >
+              {/* glare sweep on hover */}
+              {!reduceMotion && (
+                <motion.div
+                  className="pointer-events-none absolute inset-0 z-20 rounded-2xl opacity-0 transition-opacity duration-300 hover:opacity-100"
+                  style={{
+                    background: 'radial-gradient(circle at var(--gx) var(--gy), rgba(255,255,255,0.12), transparent 45%)',
+                    // @ts-expect-error css custom props
+                    '--gx': glareX,
+                    '--gy': glareY,
+                  }}
+                />
+              )}
 
-            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-4 sm:p-6">
-              <div className="sm:col-span-3 grid grid-cols-3 gap-3">
-                {[
-                  { label: 'الأرباح', value: '4.2م', delta: '+2.5%', up: true },
-                  { label: 'العاملون', value: '32', delta: '+1.3%', up: true },
-                  { label: 'إجمالي الموظفين', value: '360', delta: '-0.4%', up: false },
-                ].map((s, i) => (
-                  <motion.div
-                    key={s.label}
-                    className="rounded-xl bg-white/5 p-3.5"
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
-                    transition={{ delay: 0.5 + i * 0.09, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <div className="text-[11px] text-white/50">{s.label}</div>
-                    <div className="mt-1 num text-lg font-semibold text-white">{s.value}</div>
-                    <div className={`mt-1 flex items-center gap-1 text-[10px] num ${s.up ? 'text-green-400' : 'text-red-400'}`}>
-                      {s.up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-                      {s.delta}
-                    </div>
-                  </motion.div>
-                ))}
-
-                <div className="col-span-3 rounded-xl bg-white/5 p-4">
-                  <div className="mb-3 flex items-center justify-between text-[11px] text-white/50">
-                    <span>نسبة الحضور</span>
-                    <span className="num">2026</span>
-                  </div>
-                  <div className="flex h-28 items-end gap-3">
-                    {bars.map((h, i) => (
-                      <motion.div
-                        key={i}
-                        className="flex-1 rounded-t-md gradient-brand"
-                        initial={{ height: 0 }}
-                        whileInView={{ height: `${h}%` }}
-                        viewport={{ once: true }}
-                        whileHover={{ filter: 'brightness(1.15)' }}
-                        transition={{ duration: 0.8, delay: 0.6 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                      />
-                    ))}
-                  </div>
-                  <div className="mt-2 flex justify-between text-[9px] num text-white/40">
-                    {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m) => (
-                      <span key={m}>{m}</span>
-                    ))}
-                  </div>
-                </div>
+              <div className="flex items-center gap-1.5 rounded-t-2xl border-b border-white/10 px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
+                <span className="mx-auto num text-[11px] text-white/40">app.meemarabia.sa</span>
               </div>
 
-              <div className="rounded-xl bg-white/5 p-3.5 text-[11px] text-white/70">
-                <div className="mb-2 font-medium text-white">القائمة الرئيسية</div>
-                <div className="space-y-1.5">
-                  {['الوظائف', 'الحضور والانصراف', 'إدارة الإجازات', 'الرواتب', 'الأقسام', 'الرواتب التالية'].map((it, i) => (
+              <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-4 sm:p-6">
+                <div className="sm:col-span-3 grid grid-cols-3 gap-3">
+                  {[
+                    { label: 'الأرباح', value: '4.2م', delta: '+2.5%', up: true },
+                    { label: 'العاملون', value: '32', delta: '+1.3%', up: true },
+                    { label: 'إجمالي الموظفين', value: '360', delta: '-0.4%', up: false },
+                  ].map((s, i) => (
                     <motion.div
-                      key={it}
-                      className="rounded-lg px-2.5 py-2"
-                      initial={{ opacity: 0, x: 8 }}
-                      whileInView={{ opacity: 1, x: 0 }}
+                      key={s.label}
+                      className="rounded-xl bg-white/5 p-3.5"
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
                       viewport={{ once: true }}
-                      whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)', x: -2 }}
-                      transition={{ delay: 0.6 + i * 0.06, duration: 0.4 }}
+                      whileHover={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+                      transition={{ delay: 0.5 + i * 0.09, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      {it}
+                      <div className="text-[11px] text-white/50">{s.label}</div>
+                      <div className="mt-1 num text-lg font-semibold text-white">{s.value}</div>
+                      <div className={`mt-1 flex items-center gap-1 text-[10px] num ${s.up ? 'text-green-400' : 'text-red-400'}`}>
+                        {s.up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+                        {s.delta}
+                      </div>
                     </motion.div>
                   ))}
+
+                  <div className="col-span-3 rounded-xl bg-white/5 p-4">
+                    <div className="mb-3 flex items-center justify-between text-[11px] text-white/50">
+                      <span>نسبة الحضور</span>
+                      <span className="num">2026</span>
+                    </div>
+                    <div className="flex h-28 items-end gap-3">
+                      {bars.map((h, i) => (
+                        <motion.div
+                          key={i}
+                          className="flex-1 rounded-t-md gradient-brand"
+                          initial={{ height: 0 }}
+                          whileInView={{ height: `${h}%` }}
+                          viewport={{ once: true }}
+                          whileHover={{ filter: 'brightness(1.15)', scaleY: 1.03 }}
+                          transition={{ duration: 0.8, delay: 0.6 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-2 flex justify-between text-[9px] num text-white/40">
+                      {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m) => (
+                        <span key={m}>{m}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl bg-white/5 p-3.5 text-[11px] text-white/70">
+                  <div className="mb-2 font-medium text-white">القائمة الرئيسية</div>
+                  <div className="space-y-1.5">
+                    {['الوظائف', 'الحضور والانصراف', 'إدارة الإجازات', 'الرواتب', 'الأقسام', 'الرواتب التالية'].map((it, i) => (
+                      <motion.div
+                        key={it}
+                        className="rounded-lg px-2.5 py-2"
+                        initial={{ opacity: 0, x: 8 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)', x: -2 }}
+                        transition={{ delay: 0.6 + i * 0.06, duration: 0.4 }}
+                      >
+                        {it}
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </Reveal>
 
         <Reveal delay={0.2} variant="fade" className="mt-14">
@@ -287,7 +401,7 @@ export default function Hero() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="num text-3xl sm:text-4xl font-bold text-gradient-brand">{s.value}</div>
+                <CountUp value={s.value} className="num text-3xl sm:text-4xl font-bold text-gradient-brand" />
                 <div className="mt-1 text-sm font-medium text-ink">{s.label}</div>
                 <div className="text-xs text-muted">{s.sub}</div>
               </motion.div>

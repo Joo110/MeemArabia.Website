@@ -16,7 +16,10 @@ export default function Industries() {
         </Reveal>
       </div>
 
-      <div className="relative mt-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+      <div
+        className="relative mt-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+        dir="ltr"
+      >
         <motion.div
           className="flex w-max gap-4"
           animate={{ x: ['0%', '-50%'] }}
@@ -27,6 +30,7 @@ export default function Industries() {
           {loop.map((ind, i) => (
             <motion.span
               key={i}
+              dir="rtl"
               onHoverStart={() => setPaused(true)}
               onHoverEnd={() => setPaused(false)}
               whileHover={{ scale: 1.08, backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(20,184,166,0.5)' }}
