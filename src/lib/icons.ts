@@ -1,0 +1,33 @@
+import {
+  Settings2, Landmark, Layers, Link2, Network, SlidersHorizontal, Grid3x3, ShieldCheck,
+  Store, Workflow, Wallet, Users, BarChart3, ShoppingCart, Boxes, ClipboardList,
+  ArrowRight, Menu, X, CheckCircle2, ChevronDown, Sparkles, Building2, Cpu,
+  type LucideIcon,
+} from 'lucide-react';
+
+export const iconMap: Record<string, LucideIcon> = {
+  settings: Settings2,
+  landmark: Landmark,
+  layers: Layers,
+  link: Link2,
+  network: Network,
+  sliders: SlidersHorizontal,
+  grid: Grid3x3,
+  shield: ShieldCheck,
+  store: Store,
+  workflow: Workflow,
+  wallet: Wallet,
+  users: Users,
+  'bar-chart': BarChart3,
+  'shopping-cart': ShoppingCart,
+  boxes: Boxes,
+  clipboard: ClipboardList,
+  arrow: ArrowRight,
+  menu: Menu,
+  close: X,
+  check: CheckCircle2,
+  chevron: ChevronDown,
+  sparkle: Sparkles,
+  building: Building2,
+  cpu: Cpu,
+};

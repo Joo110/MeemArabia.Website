@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0D1130;
+  --color-ink-2: #171B45;
+  --color-paper: #F6F7FB;
+  --color-paper-2: #ECEFF7;
+  --color-card: #FFFFFF;
+  --color-blue: #2F5DFF;
+  --color-blue-2: #1E3FCB;
+  --color-teal: #14B8A6;
+  --color-green: #34D399;
+  --color-line: #E4E7F1;
+  --color-muted: #6B7086;
+
+  --font-arabic: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  --font-mono-num: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-arabic);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+.num {
+  font-family: var(--font-mono-num);
+  direction: ltr;
+  display: inline-block;
+}
+
+::selection {
+  background: var(--color-teal);
+  color: white;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to bottom, rgba(13,17,48,0.04) 1px, transparent 1px),
+    linear-gradient(to right, rgba(13,17,48,0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.gradient-brand {
+  background: linear-gradient(115deg, var(--color-blue) 0%, var(--color-teal) 55%, var(--color-green) 100%);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(115deg, var(--color-blue) 0%, var(--color-teal) 60%, var(--color-green) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass-card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
