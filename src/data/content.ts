@@ -228,5 +228,15 @@ export const faqs = [
 
 export const companySizes = ['1–10', '11–50', '51–100', '101–250', '251–500', '500–1,000', '1,000+'];
 export const interestedIn = ['MEEM HR', 'MEEM Finance', 'MEEM Business', 'MEEM POS', 'تطوير مخصص', 'تكامل الأنظمة', 'حل للشركات الكبرى', 'دعم فني', 'أخرى'];
-export const integrationReqs = ['ZATCA', 'Qiwa', 'Mudad', 'GOSI', 'بنوك', 'بوابة دفع', 'نظام ERP حالي', 'نظام HR حالي', 'أخرى'];
-export const deploymentPref = ['بحاجة استشارة', 'سحابة سعودية', 'بنية العميل', 'بيئة خاصة'];
+export const integrationReqs = [
+  'هيئة الزكاة والضريبة والجمارك (ZATCA)',
+  'قوى (Qiwa)',
+  'مدد (Mudad)',
+  'التأمينات الاجتماعية (GOSI)',
+  'بنوك',
+  'بوابة دفع',
+  'نظام ERP حالي',
+  'نظام HR حالي',
+  'أخرى',
+];
+export const deploymentPref = ['سحابة سعودية', 'بيئة خاصة', 'على بنية العميل', 'أحتاج استشارة'];

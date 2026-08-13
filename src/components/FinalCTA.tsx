@@ -6,23 +6,23 @@ export default function FinalCTA() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden py-24">
+    <section className="relative overflow-hidden py-14 sm:py-24">
       <div className="mx-auto max-w-5xl px-4">
         <Reveal variant="scale">
           <div className="relative overflow-hidden rounded-[2rem] bg-ink px-6 py-16 text-center sm:px-16">
             <motion.div
-              className="absolute -top-20 -right-20 h-64 w-64 rounded-full gradient-brand opacity-20 blur-3xl"
+              className="absolute -top-20 -right-20 hidden h-64 w-64 rounded-full gradient-brand opacity-20 blur-3xl sm:block"
               animate={{ scale: [1, 1.25, 1], x: [0, -20, 0], y: [0, 15, 0] }}
               transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.div
-              className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-blue/30 opacity-20 blur-3xl"
+              className="absolute -bottom-24 -left-24 hidden h-72 w-72 rounded-full bg-blue/30 opacity-20 blur-3xl sm:block"
               animate={{ scale: [1.2, 1, 1.2], x: [0, 20, 0], y: [0, -15, 0] }}
               transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
             />
             {!reduceMotion && (
               <motion.div
-                className="absolute inset-0 opacity-[0.07]"
+                className="absolute inset-0 hidden opacity-[0.07] sm:block"
                 style={{
                   backgroundImage: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)',
                   backgroundSize: '200% 100%',
@@ -48,8 +48,8 @@ export default function FinalCTA() {
               transition={{ delay: 0.15, duration: 0.5 }}
               className="relative mx-auto mt-4 max-w-xl text-white/70 leading-relaxed"
             >
-              نظام يتكيف مع أعمالك اليوم، ويتوسع معك غدًا. من الموارد البشرية إلى نقاط البيع
-              والتكاملات، نبني منظومة تساعدك على العمل بكفاءة أكبر.
+              منظومة تتكيف مع أعمالك اليوم، وتتوسع معك غدًا. من الموارد البشرية والمالية إلى نقاط
+              البيع والتكاملات، نبني لك بيئة أعمال مترابطة تساعدك على العمل بكفاءة أكبر.
             </motion.p>
             <motion.div
               initial="hidden"

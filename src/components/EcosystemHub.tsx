@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
 import Reveal from './Reveal';
 import { ecosystemNodes } from '../data/content';
@@ -9,9 +9,10 @@ const RADIUS = 190;
 
 export default function EcosystemHub() {
   const [hovered, setHovered] = useState<string | null>(null);
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-16 sm:py-24 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">One Connected Ecosystem</span>
@@ -25,7 +26,7 @@ export default function EcosystemHub() {
           <motion.div
             className="absolute rounded-full border border-dashed border-ink/15"
             style={{ width: RADIUS * 2, height: RADIUS * 2 }}
-            animate={{ rotate: 360 }}
+            animate={reduceMotion ? {} : { rotate: 360 }}
             transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
           />
           <div
@@ -62,23 +63,26 @@ export default function EcosystemHub() {
                     animate={isHovered ? { strokeWidth: 2 } : { strokeWidth: 1.5 }}
                     transition={{ duration: 0.8, delay: 0.3 + i * 0.1 }}
                   />
-                  {/* moving particle along the line */}
-                  <motion.circle
-                    r={2.2}
-                    fill="#14B8A6"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      cx: [cx, x],
-                      cy: [cy, y],
-                      opacity: [0, 0.9, 0],
-                    }}
-                    transition={{
-                      duration: 2.6,
-                      repeat: Infinity,
-                      delay: 1 + i * 0.35,
-                      ease: 'easeInOut',
-                    }}
-                  />
+                  {/* moving particle along the line — desktop/tablet only, skips on phones & reduced motion */}
+                  {!reduceMotion && (
+                    <motion.circle
+                      className="hidden sm:block"
+                      r={2.2}
+                      fill="#14B8A6"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        cx: [cx, x],
+                        cy: [cy, y],
+                        opacity: [0, 0.9, 0],
+                      }}
+                      transition={{
+                        duration: 2.6,
+                        repeat: Infinity,
+                        delay: 1 + i * 0.35,
+                        ease: 'easeInOut',
+                      }}
+                    />
+                  )}
                 </g>
               );
             })}
@@ -91,7 +95,7 @@ export default function EcosystemHub() {
   animate={{ scale: [1, 1.06, 1] }}
   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
 >
-  <img src={logoImg} alt="ميم العربية" className="h-full w-full object-cover" />
+  <img src={logoImg} alt="ميم العربية" loading="lazy" decoding="async" className="h-full w-full object-cover" />
 </motion.div>
 
           {ecosystemNodes.map((n, i) => {

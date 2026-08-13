@@ -44,10 +44,10 @@ function buildVariants(variant: RevealVariant, y: number, x: number): Variants {
     case 'zoom':
       return { hidden: { opacity: 0, scale: 1.06 }, show: { opacity: 1, scale: 1 } };
     case 'blur':
-      return { hidden: { opacity: 0, filter: 'blur(8px)' }, show: { opacity: 1, filter: 'blur(0px)' } };
+      return { hidden: { opacity: 0, filter: 'blur(5px)' }, show: { opacity: 1, filter: 'blur(0px)' } };
     case 'blurUp':
       return {
-        hidden: { opacity: 0, y, filter: 'blur(10px)' },
+        hidden: { opacity: 0, y, filter: 'blur(6px)' },
         show: { opacity: 1, y: 0, filter: 'blur(0px)' },
       };
     case 'spring':

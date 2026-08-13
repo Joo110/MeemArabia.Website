@@ -5,7 +5,7 @@ import { iconMap } from '../lib/icons';
 
 export default function WhyMeem() {
   return (
-    <section id="why" className="relative py-24">
+    <section id="why" className="relative py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Why Meem Arabia</span>

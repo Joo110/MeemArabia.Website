@@ -6,6 +6,22 @@ import { companySizes, interestedIn, integrationReqs, deploymentPref } from '../
 
 const WHATSAPP_NUMBER = '966566817575';
 
+// Splits a label like "هيئة الزكاة والضريبة والجمارك (ZATCA)" so the Latin
+// abbreviation renders isolated with <bdi>, avoiding RTL/LTR mix-up issues.
+function renderChipLabel(opt: string) {
+  const parts = opt.split(/(\([A-Za-z0-9\s]+\))/g).filter(Boolean);
+  if (parts.length === 1) return opt;
+  return parts.map((part, i) =>
+    /^\([A-Za-z0-9\s]+\)$/.test(part) ? (
+      <bdi key={i} style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>
+        {part}
+      </bdi>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 function ChipGroup({
   options,
   selected,
@@ -32,9 +48,9 @@ function ChipGroup({
                 ? 'border-transparent gradient-brand text-white shadow-md shadow-blue/20'
                 : 'border-line bg-white text-ink/70 hover:border-ink/30'
             }`}
-            style={{ direction: /[A-Za-z]/.test(opt) ? 'ltr' : 'rtl' }}
+            style={{ direction: /^[A-Za-z0-9\s&–-]+$/.test(opt) ? 'ltr' : 'rtl' }}
           >
-            {opt}
+            {renderChipLabel(opt)}
           </motion.button>
         );
       })}
@@ -75,7 +91,7 @@ export default function ContactForm() {
       companySize ? `حجم الشركة: ${companySize}` : null,
       `مهتم بـ: ${interests.length ? interests.join('، ') : 'لم يحدد'}`,
       `متطلبات التكامل: ${integrationsSel.length ? integrationsSel.join('، ') : 'لم يحدد'}`,
-      deployment ? `تفضيل بيئة التشغيل: ${deployment}` : null,
+      deployment ? `بيئة الاستضافة والتشغيل: ${deployment}` : null,
       details ? `تفاصيل المشروع: ${details}` : null,
     ].filter(Boolean);
 
@@ -92,7 +108,7 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="relative py-24 bg-paper-2/60">
+    <section id="contact" className="relative py-16 sm:py-24 bg-paper-2/60">
       <div className="mx-auto max-w-4xl px-4">
         <Reveal className="text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Contact Us</span>
@@ -212,7 +228,7 @@ export default function ContactForm() {
                   />
                 </Field>
 
-                <Field label="تفضيل بيئة التشغيل">
+                <Field label="بيئة الاستضافة والتشغيل">
                   <div className="flex flex-wrap gap-2">
                     {deploymentPref.map((d) => (
                       <motion.button

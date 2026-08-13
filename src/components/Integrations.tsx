@@ -8,7 +8,7 @@ export default function Integrations() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section id="integrations" className="relative py-24">
+    <section id="integrations" className="relative py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
           <div>

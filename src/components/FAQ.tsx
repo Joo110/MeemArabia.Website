@@ -8,7 +8,7 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative py-24">
+    <section id="faq" className="relative py-16 sm:py-24">
       <div className="mx-auto max-w-3xl px-4">
         <Reveal className="text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">FAQ</span>

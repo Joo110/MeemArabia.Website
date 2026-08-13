@@ -6,7 +6,7 @@ import { iconMap } from '../lib/icons';
 
 export default function ProductsGrid() {
   return (
-    <section id="products" className="relative py-24 bg-paper-2/60">
+    <section id="products" className="relative py-16 sm:py-24 bg-paper-2/60">
       <div className="mx-auto max-w-7xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Our Products</span>

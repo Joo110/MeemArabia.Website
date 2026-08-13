@@ -14,7 +14,7 @@ export default function GrowthPath() {
   const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section className="relative py-24 bg-paper-2/40">
+    <section className="relative py-14 sm:py-24 bg-paper-2/40">
       <div className="mx-auto max-w-6xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <h2 className="text-2xl sm:text-3xl font-bold text-ink leading-snug">
@@ -28,7 +28,7 @@ export default function GrowthPath() {
 
         {/* Cards */}
         <RevealStagger
-          className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-3"
+          className="mt-8 grid grid-cols-1 gap-4 sm:mt-14 sm:gap-6 sm:grid-cols-3"
           stagger={0.1}
         >
           {[...growthPath].reverse().map((stage) => (

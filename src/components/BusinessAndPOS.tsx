@@ -5,16 +5,22 @@ import { businessModules, posFlow } from '../data/content';
 
 export default function BusinessAndPOS() {
   return (
-    <section className="relative py-24">
+    <section className="relative py-14 sm:py-24">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-10 sm:gap-16 lg:grid-cols-5">
           <div className="lg:col-span-3">
             <Reveal variant="slideRight">
               <span className="text-xs font-semibold uppercase tracking-widest text-teal">MEEM Business</span>
               <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-ink">منظومة واحدة لإدارة أعمالك</h2>
               <p className="mt-4 max-w-lg text-muted leading-relaxed">
-                الطبقة الإدارية التي تجمع العمليات المختلفة داخل المنشأة وتمنح الإدارة رؤية موحدة
-                للأعمال، من الطلبات والموافقات إلى الفروع والتقارير.
+                منظومة إدارية مترابطة تجمع عمليات منشأتك في مكان واحد، وتمنح الإدارة رؤية موحدة
+                للأعمال، من الطلبات والموافقات والفروع إلى المبيعات والمخزون والتقارير.
+              </p>
+              <p className="mt-3 max-w-lg text-[13px] leading-relaxed text-ink/70">
+                يمكن ربط <span className="font-semibold text-ink">MEEM HR</span> و
+                <span className="font-semibold text-ink"> MEEM Finance</span> و
+                <span className="font-semibold text-ink"> MEEM POS</span> معًا عبر MEEM Business،
+                أو استخدام كل منتج بشكل مستقل حسب احتياج منشأتك.
               </p>
             </Reveal>
 
@@ -51,15 +57,15 @@ export default function BusinessAndPOS() {
               <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-ink">من نقطة البيع إلى الحسابات والمخزون</h2>
               <p className="mt-4 text-muted leading-relaxed">
                 عند تفعيل التكامل بين منتجات ميم، تنعكس عملية البيع الواحدة على الأنظمة ذات العلاقة
-                دون الحاجة لإدخال نفس البيانات عدة مرات.
+                دون الحاجة إلى إعادة إدخال البيانات.
               </p>
 
-              <div className="mt-8 flex flex-col gap-0">
+              <div className="mt-6 flex flex-col gap-0 sm:mt-8">
                 {posFlow.map((step, i) => (
                   <div key={step} className="flex items-center gap-4">
                     <div className="flex flex-col items-center">
                       <motion.div
-                        className="relative flex h-10 w-10 items-center justify-center rounded-xl gradient-brand text-xs font-bold text-white shadow-md"
+                        className="relative flex h-9 w-9 items-center justify-center rounded-xl gradient-brand text-xs font-bold text-white shadow-md sm:h-10 sm:w-10"
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
                         viewport={{ once: true }}
@@ -76,7 +82,7 @@ export default function BusinessAndPOS() {
                       </motion.div>
                       {i < posFlow.length - 1 && (
                         <motion.div
-                          className="my-1 h-8 w-px bg-gradient-to-b from-teal to-line"
+                          className="my-1 h-5 w-px bg-gradient-to-b from-teal to-line sm:h-8"
                           initial={{ scaleY: 0 }}
                           whileInView={{ scaleY: 1 }}
                           viewport={{ once: true }}
@@ -86,7 +92,7 @@ export default function BusinessAndPOS() {
                       )}
                     </div>
                     <motion.div
-                      className="pb-8 text-[14px] font-semibold text-ink"
+                      className="pb-5 text-[14px] font-semibold text-ink sm:pb-8"
                       initial={{ opacity: 0, x: -8 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}

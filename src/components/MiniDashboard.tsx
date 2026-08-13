@@ -154,33 +154,41 @@ export function InvoiceDashboard() {
           </div>
         </div>
       </div>
-      <table className="w-full text-[10.5px]">
-        <thead>
-          <tr className="border-b border-line text-muted">
-            <th className="pb-2 text-right font-medium">الوصف</th>
-            <th className="pb-2 font-medium">الكمية</th>
-            <th className="pb-2 font-medium">السعر</th>
-            <th className="pb-2 font-medium">المجموع</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r, i) => (
-            <motion.tr
-              key={r.d}
-              className="border-b border-line/60"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12 }}
-            >
-              <td className="py-2 text-ink/80">{r.d}</td>
-              <td className="num py-2 text-center text-ink/70">{r.q}</td>
-              <td className="num py-2 text-center text-ink/70">{r.p}</td>
-              <td className="num py-2 text-center font-medium text-ink">{r.t}</td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="-mx-1 overflow-x-auto px-1">
+        <table className="w-full min-w-[380px] text-[10.5px] sm:min-w-0">
+          <colgroup>
+            <col className="w-[46%]" />
+            <col className="w-[16%]" />
+            <col className="w-[19%]" />
+            <col className="w-[19%]" />
+          </colgroup>
+          <thead>
+            <tr className="border-b border-line text-muted">
+              <th className="pb-2 text-right font-medium">الوصف</th>
+              <th className="pb-2 text-center font-medium">الكمية</th>
+              <th className="pb-2 text-center font-medium">السعر</th>
+              <th className="pb-2 text-center font-medium">المجموع</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <motion.tr
+                key={r.d}
+                className="border-b border-line/60"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
+              >
+                <td className="py-2 pl-2 text-ink/80">{r.d}</td>
+                <td className="num py-2 text-center text-ink/70">{r.q}</td>
+                <td className="num py-2 text-center whitespace-nowrap text-ink/70">{r.p}</td>
+                <td className="num py-2 text-center whitespace-nowrap font-medium text-ink">{r.t}</td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="mt-3 flex items-center justify-between rounded-lg bg-paper-2/70 px-3 py-2.5 text-[11px]">
         <span className="text-muted">الإجمالي شامل الضريبة (15%)</span>
         <span className="num font-bold text-ink">19,035 ر.س</span>

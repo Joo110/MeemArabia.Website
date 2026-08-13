@@ -5,7 +5,7 @@ import { Cpu } from 'lucide-react';
 
 export default function TechStack() {
   return (
-    <section className="relative py-24 bg-paper-2/60">
+    <section className="relative py-16 sm:py-24 bg-paper-2/60">
       <div className="mx-auto max-w-7xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Technologies</span>
@@ -20,7 +20,7 @@ export default function TechStack() {
               initial="rest"
               whileHover="hover"
               animate="rest"
-              className="relative overflow-hidden rounded-2xl border border-line bg-card p-6"
+              className="relative overflow-hidden rounded-2xl border border-line bg-card p-4 sm:p-6"
             >
               <motion.div
                 className="pointer-events-none absolute inset-0 rounded-2xl"
@@ -42,7 +42,7 @@ export default function TechStack() {
                   <span className="absolute inset-0 rounded-xl bg-teal/40 animate-ping" style={{ animationDuration: '3s' }} />
                   <Cpu size={18} className="relative" />
                 </motion.div>
-                <h3 className="mt-4 text-sm font-bold text-ink">{category}</h3>
+                <h3 className="mt-3 sm:mt-4 text-sm font-bold text-ink">{category}</h3>
                 <motion.div
                   className="mt-3 flex flex-wrap gap-1.5"
                   initial="hidden"

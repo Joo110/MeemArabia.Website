@@ -124,18 +124,19 @@ export default function Hero() {
       id="home"
       className="relative pt-32 pb-20 lg:pt-44 lg:pb-28 overflow-hidden bg-grid"
     >
-      {/* floating bubbles */}
+      {/* floating bubbles — full set on tablet/desktop, a light subset on phones to save GPU/CPU */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {bubbles.map((b, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full"
+            className={`absolute rounded-full ${i >= 6 ? 'hidden sm:block' : ''}`}
             style={{
               left: `${b.left}%`,
               top: `${b.top}%`,
               width: b.size,
               height: b.size,
               border: '1.5px solid rgba(20,184,166,0.5)',
+              willChange: reduceMotion ? undefined : 'transform, opacity',
             }}
             animate={
               reduceMotion
@@ -156,10 +157,10 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* ambient orbs — different scroll speeds for gentle parallax */}
+      {/* ambient orbs — different scroll speeds for gentle parallax. Hidden on phones: pure decoration, not worth the paint cost there. */}
       <motion.div
         style={{ y: orbSlowY }}
-        className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full border border-teal/20"
+        className="pointer-events-none absolute -top-24 -left-24 hidden h-72 w-72 rounded-full border border-teal/20 sm:block"
       >
         <motion.div
           className="h-full w-full rounded-full border border-teal/20"
@@ -169,7 +170,7 @@ export default function Hero() {
       </motion.div>
       <motion.div
         style={{ y: orbFastY }}
-        className="pointer-events-none absolute top-1/3 -right-16 h-56 w-56 rounded-full border border-blue/15"
+        className="pointer-events-none absolute top-1/3 -right-16 hidden h-56 w-56 rounded-full border border-blue/15 sm:block"
       >
         <motion.div
           className="h-full w-full rounded-full border border-blue/15"

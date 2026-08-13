@@ -6,12 +6,12 @@ import { nav } from '../data/content';
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-line bg-card pt-14 pb-10">
+    <footer className="relative border-t border-line bg-card pt-10 pb-6 sm:pt-14 sm:pb-10">
       <div className="absolute inset-x-0 top-0 h-[3px] gradient-brand" />
 
       <div className="mx-auto max-w-7xl px-4">
         <Reveal variant="fade" amount={0.1}>
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
             <div className="lg:col-span-1">
               <Logo />
               <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted">
@@ -94,9 +94,9 @@ export default function Footer() {
           </div>
         </Reveal>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-[12px] text-muted sm:flex-row">
+        <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-line pt-5 text-[12px] text-muted sm:mt-10 sm:pt-6 sm:flex-row">
           <span>© {new Date().getFullYear()} ميم العربية. جميع الحقوق محفوظة.</span>
-          <span className="num tracking-wide">Saudi Business Ready · Configurable · Integrated · Scalable</span>
+          <span className="num tracking-wide">Built for Saudi Business • Configurable • Integrated • Scalable</span>
         </div>
       </div>
     </footer>

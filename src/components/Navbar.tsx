@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Logo from './Logo';
@@ -7,26 +7,58 @@ import { nav } from '../data/content';
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 12);
+        ticking = false;
+      });
+    };
     onScroll();
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Keep a live CSS var with the header's real rendered height (it changes
+  // between the scrolled/unscrolled states). Any section can then set
+  // `scroll-margin-top: var(--header-h)` so anchor jumps never hide the
+  // section title behind the fixed header — fixes the P0 overlap issue.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const setVar = () => {
+      document.documentElement.style.setProperty('--header-h', `${el.offsetHeight + 12}px`);
+    };
+    setVar();
+    const ro = new ResizeObserver(setVar);
+    ro.observe(el);
+    window.addEventListener('resize', setVar);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', setVar);
+    };
+  }, [scrolled]);
+
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'py-2' : 'py-4'
+    <>
+      <style>{`:root{--header-h:88px} #home,#work,#products,#integrations,#why,#faq,#contact,section[id]{scroll-margin-top:var(--header-h)}`}</style>
+      <header
+      ref={headerRef}
+      className={`fixed inset-x-0 top-0 z-[999] transition-all duration-300 ${
+        scrolled ? 'py-1.5 sm:py-2' : 'py-3 sm:py-4'
       }`}
     >
       <div
-        className={`mx-auto max-w-7xl px-4 transition-all duration-300`}
+        className={`mx-auto max-w-7xl px-3 sm:px-4 transition-all duration-300`}
       >
         <div
-          className={`flex items-center justify-between rounded-2xl px-4 transition-all duration-300 ${
-            scrolled ? 'glass-card shadow-lg shadow-ink/5 py-2' : 'py-3'
+          className={`flex items-center justify-between rounded-2xl px-3 sm:px-4 transition-all duration-300 ${
+            scrolled ? 'glass-card shadow-lg shadow-ink/5 py-1.5 sm:py-2' : 'py-2.5 sm:py-3'
           }`}
         >
           <a href="#home" aria-label="ميم العربية - الرئيسية">
@@ -38,7 +70,8 @@ export default function Navbar() {
               <a
                 key={item.href}
                 href={item.href}
-className="px-4 py-2 text-lg font-medium text-ink/80 hover:text-ink rounded-lg hover:bg-ink/5 transition-colors"              >
+                className="px-4 py-2 text-sm font-medium text-ink/80 hover:text-ink rounded-lg hover:bg-ink/5 transition-colors"
+              >
                 {item.label}
               </a>
             ))}
@@ -101,6 +134,7 @@ className="px-4 py-2 text-lg font-medium text-ink/80 hover:text-ink rounded-lg h
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+      </header>
+    </>
   );
 }
