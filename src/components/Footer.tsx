@@ -1,102 +1,172 @@
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Mail, Globe } from 'lucide-react';
 import Logo from './Logo';
-import Reveal from './Reveal';
-import { nav } from '../data/content';
+import Reveal, { magneticProps } from './Reveal';
+
+const companyLinks = [
+  { label: 'من نحن', href: '#why' },
+  { label: 'لماذا ميم؟', href: '#why' },
+  { label: 'المنتجات', href: '#products' },
+  { label: 'مشاريعنا', href: '#work' },
+  { label: 'تواصل معنا', href: '#contact' },
+];
+
+const solutionLinks = [
+  { label: 'الموارد البشرية', href: '#hr' },
+  { label: 'المالية والمحاسبة', href: '#products' },
+  { label: 'إدارة الأعمال', href: '#products' },
+  { label: 'نقاط البيع', href: '#products' },
+  { label: 'التطوير المخصص', href: '#contact' },
+  { label: 'تكامل الأنظمة', href: '#integrations' },
+];
+
+const resourceLinks = [
+  { label: 'الأسئلة الشائعة', href: '#faq' },
+  { label: 'مركز المساعدة', href: '#contact' },
+  { label: 'الدعم الفني', href: '#contact' },
+  { label: 'التكاملات', href: '#integrations' },
+];
+
+const contactLinks = [
+  { label: 'info@meemarabia.sa', href: 'mailto:info@meemarabia.sa' },
+  { label: 'sales@meemarabia.sa', href: 'mailto:sales@meemarabia.sa' },
+  { label: '056 681 7575', href: 'tel:+966566817575' },
+  { label: 'المملكة العربية السعودية', href: '#contact' },
+];
+
+// NOTE on alignment: Tailwind's `items-end` maps to CSS `align-items: flex-end`,
+// which follows the *logical* inline-end — on an RTL page that is the LEFT edge,
+// not the right. That's what was pushing the contact numbers/emails to the left.
+// Fixing this properly for RTL means using explicit `text-right` on full-width
+// block links instead of flex cross-axis alignment.
+function FooterLinkCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+  return (
+    <div className="text-center sm:text-right">
+      <span className="text-xs font-semibold uppercase tracking-widest text-teal">{title}</span>
+      <div className="mt-4 flex flex-col gap-2.5 text-[13px] text-white/65">
+        {links.map((l) => (
+          <motion.a
+            key={l.label}
+            href={l.href}
+            className="relative block w-full text-center transition-colors hover:text-white sm:text-right"
+            whileHover="hover"
+            initial="rest"
+          >
+            {l.label}
+            <motion.span
+              className="absolute -bottom-0.5 right-0 hidden h-px w-full bg-white sm:block"
+              variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+              style={{ transformOrigin: 'right' }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </motion.a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ContactCol() {
+  return (
+    <div className="text-center sm:text-right">
+      <span className="text-xs font-semibold uppercase tracking-widest text-teal">التواصل</span>
+      <div className="mt-4 flex flex-col gap-2.5 text-[13px] text-white/65">
+        {contactLinks.map((l) => {
+          const isLatin = /^[a-zA-Z0-9@.\s+]+$/.test(l.label);
+          return (
+            <motion.a
+              key={l.label}
+              href={l.href}
+              className="num block w-full text-center transition-colors hover:text-white sm:text-right"
+              style={isLatin ? { direction: 'ltr', unicodeBidi: 'plaintext' } : undefined}
+              whileHover={{ color: '#14B8A6' }}
+              transition={{ duration: 0.2 }}
+            >
+              {l.label}
+            </motion.a>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function Footer() {
-  return (
-    <footer className="relative border-t border-line bg-card pt-10 pb-6 sm:pt-14 sm:pb-10">
-      <div className="absolute inset-x-0 top-0 h-[3px] gradient-brand" />
+  const reduceMotion = useReducedMotion();
 
-      <div className="mx-auto max-w-7xl px-4">
+  return (
+    <footer className="relative overflow-hidden bg-[radial-gradient(120%_140%_at_15%_0%,#232a5c_0%,#171b3c_38%,#0c0e22_100%)]">
+      {/* CTA row */}
+      <div className="relative border-b border-white/10">
+        <Reveal
+          className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-4 py-10 text-center sm:flex-row sm:justify-between sm:py-14 sm:text-right"
+          variant="fade"
+          amount={0.2}
+        >
+          <motion.a
+            href="#contact"
+            {...(!reduceMotion ? magneticProps(5) : {})}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            className="order-2 inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm"
+          >
+            تواصل معنا
+          </motion.a>
+          <div className="order-1">
+            <h3 className="text-xl font-bold leading-snug text-white sm:text-2xl">
+              هل أنت مستعد لبناء شيء رائع؟
+            </h3>
+            <p className="mt-2 text-[13.5px] text-white/60">
+              انضم لمنشآت تنمو وتدير أعمالها بذكاء مع ميم العربية.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+
+      {/* link columns */}
+      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:py-16">
         <Reveal variant="fade" amount={0.1}>
-          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
-            <div className="lg:col-span-1">
-              <Logo />
-              <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted">
-                أنظمة أعمال مترابطة، مرنة، ومصممة لبيئة الأعمال في المملكة العربية السعودية.
+          <div className="grid grid-cols-1 gap-10 text-center sm:grid-cols-2 sm:gap-8 sm:text-right lg:grid-cols-5">
+            <div className="flex flex-col items-center sm:items-end lg:col-span-1">
+              <div className="[&_.font-bold]:text-white [&_.text-muted]:text-white/50">
+                <Logo />
+              </div>
+              <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/55">
+                حلول تقنية متكاملة تساعد منشأتك على النمو، من الموارد البشرية والمالية إلى نقاط
+                البيع وإدارة الأعمال — أنظمة مترابطة، مرنة، ومصممة لبيئة الأعمال في المملكة.
               </p>
             </div>
 
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-teal">
-                روابط سريعة
-              </span>
-              <div className="mt-4 flex flex-col gap-2.5 text-[13px] text-ink/70">
-                {nav.map((n) => (
-                  <motion.a
-                    key={n.href}
-                    href={n.href}
-                    className="relative w-fit text-ink/70 transition-colors hover:text-ink"
-                    whileHover="hover"
-                    initial="rest"
-                  >
-                    {n.label}
-                    <motion.span
-                      className="absolute -bottom-0.5 right-0 h-px w-full bg-ink"
-                      variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
-                      style={{ transformOrigin: 'right' }}
-                      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                    />
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-teal">
-                تواصل معنا
-              </span>
-              <div className="mt-4 flex flex-col gap-3 text-[13px] text-ink/70">
-                <motion.a
-                  href="mailto:info@meemarabia.sa"
-                  className="num flex items-center gap-2 w-fit"
-                  style={{ direction: 'ltr' }}
-                  whileHover={{ color: 'var(--color-teal)', x: -2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Mail size={15} strokeWidth={1.75} />
-                  info@meemarabia.sa
-                </motion.a>
-                <motion.a
-                  href="mailto:sales@meemarabia.sa"
-                  className="num flex items-center gap-2 w-fit"
-                  style={{ direction: 'ltr' }}
-                  whileHover={{ color: 'var(--color-teal)', x: -2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Mail size={15} strokeWidth={1.75} />
-                  sales@meemarabia.sa
-                </motion.a>
-                <motion.a
-                  href="tel:+966566817575"
-                  className="num flex items-center gap-2 w-fit"
-                  style={{ direction: 'ltr' }}
-                  whileHover={{ color: 'var(--color-teal)', x: -2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Phone size={15} strokeWidth={1.75} />
-                  056 681 7575
-                </motion.a>
-              </div>
-            </div>
-
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-teal">
-                الموقع
-              </span>
-              <div className="mt-4 flex items-start gap-2 text-[13px] text-ink/70">
-                <MapPin size={15} strokeWidth={1.75} className="mt-0.5 shrink-0" />
-                <span>المملكة العربية السعودية</span>
-              </div>
-            </div>
+            <FooterLinkCol title="الشركة" links={companyLinks} />
+            <FooterLinkCol title="الحلول" links={solutionLinks} />
+            <FooterLinkCol title="الموارد" links={resourceLinks} />
+            <ContactCol />
           </div>
         </Reveal>
+      </div>
 
-        <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-line pt-5 text-[12px] text-muted sm:mt-10 sm:pt-6 sm:flex-row">
-          <span>© {new Date().getFullYear()} ميم العربية. جميع الحقوق محفوظة.</span>
-          <span className="num tracking-wide">Built for Saudi Business • Configurable • Integrated • Scalable</span>
+      {/* bottom bar */}
+      <div className="relative border-t border-white/10 bg-black/40">
+        <div className="mx-auto flex max-w-7xl flex-col-reverse items-center justify-between gap-3 px-4 py-5 text-[12px] text-white/50 sm:flex-row">
+          <span>© {new Date().getFullYear()} ميم العربية — جميع الحقوق محفوظة</span>
+          <div className="flex items-center gap-2">
+            <motion.a
+              href="mailto:info@meemarabia.sa"
+              aria-label="البريد الإلكتروني"
+              whileHover={{ y: -2, backgroundColor: 'rgba(255,255,255,0.12)' }}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70"
+            >
+              <Mail size={14} strokeWidth={1.75} />
+            </motion.a>
+            <motion.a
+              href="#home"
+              aria-label="الموقع الإلكتروني"
+              whileHover={{ y: -2, backgroundColor: 'rgba(255,255,255,0.12)' }}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70"
+            >
+              <Globe size={14} strokeWidth={1.75} />
+            </motion.a>
+          </div>
         </div>
       </div>
     </footer>

@@ -9,7 +9,7 @@ export default function FinalCTA() {
     <section className="relative overflow-hidden py-14 sm:py-24">
       <div className="mx-auto max-w-5xl px-4">
         <Reveal variant="scale">
-          <div className="relative overflow-hidden rounded-[2rem] bg-ink px-6 py-16 text-center sm:px-16">
+          <div className="relative overflow-hidden rounded-[2rem] bg-[radial-gradient(120%_140%_at_15%_0%,#232a5c_0%,#171b3c_38%,#0c0e22_100%)] px-6 py-16 text-center sm:px-16">
             <motion.div
               className="absolute -top-20 -right-20 hidden h-64 w-64 rounded-full gradient-brand opacity-20 blur-3xl sm:block"
               animate={{ scale: [1, 1.25, 1], x: [0, -20, 0], y: [0, 15, 0] }}
