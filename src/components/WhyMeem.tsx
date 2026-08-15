@@ -9,7 +9,7 @@ export default function WhyMeem() {
       <div className="mx-auto max-w-7xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Why Meem Arabia</span>
-          <h2 className="mt-3 text-3xl lg:text-4xl font-bold text-ink">لماذا تختار ميم العربية؟</h2>
+          <h2 className="mt-3 text-3xl lg:text-4xl font-bold text-ink">ليه تختار ميم العربية؟</h2>
           <p className="mt-4 text-muted leading-relaxed">
             حلول تقنية مصممة لتنمو مع أعمالك، بدلًا من أن تعيد بناء أنظمتك في كل مرحلة.
           </p>

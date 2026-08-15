@@ -124,19 +124,18 @@ export default function Hero() {
       id="home"
       className="relative pt-32 pb-20 lg:pt-44 lg:pb-28 overflow-hidden bg-grid"
     >
-      {/* floating bubbles — full set on tablet/desktop, a light subset on phones to save GPU/CPU */}
+      {/* floating bubbles */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {bubbles.map((b, i) => (
           <motion.div
             key={i}
-            className={`absolute rounded-full ${i >= 6 ? 'hidden sm:block' : ''}`}
+            className="absolute rounded-full"
             style={{
               left: `${b.left}%`,
               top: `${b.top}%`,
               width: b.size,
               height: b.size,
               border: '1.5px solid rgba(20,184,166,0.5)',
-              willChange: reduceMotion ? undefined : 'transform, opacity',
             }}
             animate={
               reduceMotion
@@ -157,10 +156,10 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* ambient orbs — different scroll speeds for gentle parallax. Hidden on phones: pure decoration, not worth the paint cost there. */}
+      {/* ambient orbs — different scroll speeds for gentle parallax */}
       <motion.div
         style={{ y: orbSlowY }}
-        className="pointer-events-none absolute -top-24 -left-24 hidden h-72 w-72 rounded-full border border-teal/20 sm:block"
+        className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full border border-teal/20"
       >
         <motion.div
           className="h-full w-full rounded-full border border-teal/20"
@@ -170,7 +169,7 @@ export default function Hero() {
       </motion.div>
       <motion.div
         style={{ y: orbFastY }}
-        className="pointer-events-none absolute top-1/3 -right-16 hidden h-56 w-56 rounded-full border border-blue/15 sm:block"
+        className="pointer-events-none absolute top-1/3 -right-16 h-56 w-56 rounded-full border border-blue/15"
       >
         <motion.div
           className="h-full w-full rounded-full border border-blue/15"
@@ -203,7 +202,7 @@ export default function Hero() {
                 animate={reduceMotion ? undefined : { scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
                 transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
               />
-              Technology Built Around Your Business
+MEEM HR & MEEM Finance
             </motion.span>
           </Reveal>
 
@@ -220,7 +219,7 @@ export default function Hero() {
                 variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
-                أنظمة أعمال مترابطة، مرنة، ومصممة
+                نظاما ميم: الموارد البشرية
               </motion.span>
               <br className="hidden sm:block" />
               <motion.span
@@ -240,13 +239,13 @@ export default function Hero() {
                   transition: { backgroundPosition: { duration: 6, repeat: Infinity, ease: 'linear' } },
                 })}
               >
-                {' '}لبيئة الأعمال في المملكة
+                {' '}والحسابات المالية
               </motion.span>
             </motion.h1>
           </div>
 
           <WordsReveal
-            text="نبني حلولًا لإدارة الموارد البشرية، والعمليات المالية، والمبيعات، والفروع، والمخزون، وقابلية التكامل مع الجهات والمنصات ذات العلاقة وفق المتطلبات الفنية والتنظيمية والاعتمادات المتاحة لكل خدمة."
+            text="منصتان مترابطتان لإدارة موظفيك وحساباتك المالية من مكان واحد، مصممتان لبيئة الأعمال في المملكة، مع قابلية التكامل مع الجهات والمنصات ذات العلاقة وفق المتطلبات الفنية والتنظيمية والاعتمادات المتاحة."
             className="mt-6 text-base lg:text-lg text-muted leading-relaxed"
             delay={0.3}
           />
@@ -254,7 +253,7 @@ export default function Hero() {
           <Reveal delay={0.42} variant="spring">
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <motion.a
-                href="#products"
+                href="#hr"
                 {...(!reduceMotion ? magneticProps(6) : {})}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.95 }}
@@ -265,7 +264,7 @@ export default function Hero() {
                   whileHover={{ translateX: '100%' }}
                   transition={{ duration: 0.6, ease: 'easeInOut' }}
                 />
-                <span className="relative z-10">اكتشف منتجاتنا</span>
+                <span className="relative z-10">اكتشف أنظمتنا</span>
                 <ArrowLeft size={16} className="relative z-10 transition-transform group-hover:-translate-x-1" />
               </motion.a>
               <motion.a
@@ -321,9 +320,9 @@ export default function Hero() {
               <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-4 sm:p-6">
                 <div className="sm:col-span-3 grid grid-cols-3 gap-3">
                   {[
-                    { label: 'الأرباح', value: '4.2م', delta: '+2.5%', up: true },
-                    { label: 'العاملون', value: '32', delta: '+1.3%', up: true },
-                    { label: 'إجمالي الموظفين', value: '360', delta: '-0.4%', up: false },
+                    { label: 'صافي الربح', value: '4.2م', delta: '+2.5%', up: true },
+                    { label: 'الموظفون النشطون', value: '248', delta: '+1.3%', up: true },
+                    { label: 'إجمالي المصروفات', value: '360أ', delta: '-0.4%', up: false },
                   ].map((s, i) => (
                     <motion.div
                       key={s.label}
@@ -372,7 +371,7 @@ export default function Hero() {
                 <div className="rounded-xl bg-white/5 p-3.5 text-[11px] text-white/70">
                   <div className="mb-2 font-medium text-white">القائمة الرئيسية</div>
                   <div className="space-y-1.5">
-                    {['الوظائف', 'الحضور والانصراف', 'إدارة الإجازات', 'الرواتب', 'الأقسام', 'الرواتب التالية'].map((it, i) => (
+                    {['ملفات الموظفين', 'الحضور والانصراف', 'إدارة الإجازات', 'الرواتب', 'الفواتير الضريبية', 'التقارير المالية'].map((it, i) => (
                       <motion.div
                         key={it}
                         className="rounded-lg px-2.5 py-2"

@@ -1,26 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import Logo from './Logo';
 import { nav } from '../data/content';
+
+// Routes where the navbar should always render solid (never transparent),
+// even before the user scrolls — e.g. dark-hero pages where a see-through
+// header over light content at the top would be hard to read.
+const ALWAYS_SOLID_ROUTES = ['/hr', '/finance'];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const { pathname } = useLocation();
+
+  const forceSolid = ALWAYS_SOLID_ROUTES.some((route) => pathname.startsWith(route));
+  const isSolid = scrolled || forceSolid;
 
   useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 12);
-        ticking = false;
-      });
-    };
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -42,15 +44,15 @@ export default function Navbar() {
       ro.disconnect();
       window.removeEventListener('resize', setVar);
     };
-  }, [scrolled]);
+  }, [isSolid]);
 
   return (
     <>
-      <style>{`:root{--header-h:88px} #home,#work,#products,#integrations,#why,#faq,#contact,section[id]{scroll-margin-top:var(--header-h)}`}</style>
+      <style>{`:root{--header-h:88px} #home,#work,#products,#integrations,#why,#faq,#contact,#hr-home,#finance-home,section[id]{scroll-margin-top:var(--header-h)}`}</style>
       <header
       ref={headerRef}
       className={`fixed inset-x-0 top-0 z-[999] transition-all duration-300 ${
-        scrolled ? 'py-1.5 sm:py-2' : 'py-3 sm:py-4'
+        isSolid ? 'py-1.5 sm:py-2' : 'py-3 sm:py-4'
       }`}
     >
       <div
@@ -58,39 +60,39 @@ export default function Navbar() {
       >
         <div
           className={`flex items-center justify-between rounded-2xl px-3 sm:px-4 transition-all duration-300 ${
-            scrolled ? 'glass-card shadow-lg shadow-ink/5 py-1.5 sm:py-2' : 'py-2.5 sm:py-3'
+            isSolid ? 'glass-card shadow-lg shadow-ink/5 py-1.5 sm:py-2' : 'py-2.5 sm:py-3'
           }`}
         >
-          <a href="#home" aria-label="ميم العربية - الرئيسية">
+          <Link to="/#home" aria-label="ميم العربية - الرئيسية">
             <Logo />
-          </a>
+          </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
             {nav.map((item) => (
-              <a
+              <Link
                 key={item.href}
-                href={item.href}
+                to={item.href}
                 className="px-4 py-2 text-sm font-medium text-ink/80 hover:text-ink rounded-lg hover:bg-ink/5 transition-colors"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <a
-              href="#contact"
+            <Link
+              to="/#contact"
               className="px-4 py-2 text-sm font-medium text-ink/80 hover:text-ink transition-colors"
             >
               تواصل معنا
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/#contact"
               className="relative overflow-hidden px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-ink transition-transform hover:scale-[1.03] active:scale-95"
             >
               <span className="relative z-10">احجز استشارة</span>
               <span className="absolute inset-0 gradient-brand opacity-0 hover:opacity-100 transition-opacity" />
-            </a>
+            </Link>
           </div>
 
           <button
@@ -114,22 +116,22 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-3">
               {nav.map((item) => (
-                <a
+                <Link
                   key={item.href}
-                  href={item.href}
+                  to={item.href}
                   onClick={() => setOpen(false)}
                   className="px-4 py-3 text-sm text-ink/85 hover:bg-ink/5 rounded-xl"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
-              <a
-                href="#contact"
+              <Link
+                to="/#contact"
                 onClick={() => setOpen(false)}
                 className="mt-2 px-4 py-3 rounded-xl text-sm font-semibold text-white bg-ink text-center"
               >
                 احجز استشارة
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}

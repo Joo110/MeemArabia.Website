@@ -9,20 +9,20 @@ export default function FinalCTA() {
     <section className="relative overflow-hidden py-14 sm:py-24">
       <div className="mx-auto max-w-5xl px-4">
         <Reveal variant="scale">
-          <div className="relative overflow-hidden rounded-[2rem] bg-[radial-gradient(120%_140%_at_15%_0%,#232a5c_0%,#171b3c_38%,#0c0e22_100%)] px-6 py-16 text-center sm:px-16">
+          <div className="relative overflow-hidden rounded-[2rem] bg-ink px-6 py-16 text-center sm:px-16">
             <motion.div
-              className="absolute -top-20 -right-20 hidden h-64 w-64 rounded-full gradient-brand opacity-20 blur-3xl sm:block"
+              className="absolute -top-20 -right-20 h-64 w-64 rounded-full gradient-brand opacity-20 blur-3xl"
               animate={{ scale: [1, 1.25, 1], x: [0, -20, 0], y: [0, 15, 0] }}
               transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.div
-              className="absolute -bottom-24 -left-24 hidden h-72 w-72 rounded-full bg-blue/30 opacity-20 blur-3xl sm:block"
+              className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-blue/30 opacity-20 blur-3xl"
               animate={{ scale: [1.2, 1, 1.2], x: [0, 20, 0], y: [0, -15, 0] }}
               transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
             />
             {!reduceMotion && (
               <motion.div
-                className="absolute inset-0 hidden opacity-[0.07] sm:block"
+                className="absolute inset-0 opacity-[0.07]"
                 style={{
                   backgroundImage: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)',
                   backgroundSize: '200% 100%',
@@ -39,7 +39,7 @@ export default function FinalCTA() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="relative text-3xl font-bold leading-snug text-white sm:text-4xl"
             >
-              جاهز لبناء أعمال أكثر ذكاءً؟
+              جاهز لتنظيم مواردك البشرية وحساباتك المالية؟
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 12 }}
@@ -48,8 +48,8 @@ export default function FinalCTA() {
               transition={{ delay: 0.15, duration: 0.5 }}
               className="relative mx-auto mt-4 max-w-xl text-white/70 leading-relaxed"
             >
-              منظومة تتكيف مع أعمالك اليوم، وتتوسع معك غدًا. من الموارد البشرية والمالية إلى نقاط
-              البيع والتكاملات، نبني لك بيئة أعمال مترابطة تساعدك على العمل بكفاءة أكبر.
+              منظومة تتكيف مع أعمالك اليوم، وتتوسع معك غدًا. من إدارة الموظفين والرواتب إلى
+              الفواتير والتقارير المالية، نبني لك بيئة أعمال مترابطة تساعدك على العمل بكفاءة أكبر.
             </motion.p>
             <motion.div
               initial="hidden"
@@ -59,14 +59,14 @@ export default function FinalCTA() {
               className="relative mt-8 flex flex-wrap justify-center gap-3"
             >
               <motion.a
-                href="#products"
+                href="#hr"
                 variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
                 {...(!reduceMotion ? magneticProps(6) : {})}
                 whileHover={{ scale: 1.04, boxShadow: '0 12px 30px rgba(47,93,255,0.45)' }}
                 whileTap={{ scale: 0.96 }}
                 className="rounded-xl gradient-brand px-6 py-3.5 text-sm font-semibold text-white shadow-lg"
               >
-                اكتشف منتجاتنا
+                اكتشف أنظمتنا
               </motion.a>
               <motion.a
                 href="#contact"

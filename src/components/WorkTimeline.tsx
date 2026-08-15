@@ -29,7 +29,7 @@ export default function WorkTimeline() {
             style={{ scaleX: lineScale, transformOrigin: 'right' }}
           />
 
-          <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-x-6 sm:gap-y-10 sm:grid-cols-4 lg:grid-cols-8">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:grid-cols-8">
             {workSteps.map((s, i) => (
               <motion.div
                 key={s.n}
@@ -40,7 +40,7 @@ export default function WorkTimeline() {
                 className="relative"
               >
                 <motion.div
-                  className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-paper num text-xs font-bold leading-none text-ink sm:h-12 sm:w-12"
+                  className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-paper num text-xs font-bold text-ink"
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}

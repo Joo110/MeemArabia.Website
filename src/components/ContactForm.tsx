@@ -6,22 +6,6 @@ import { companySizes, interestedIn, integrationReqs, deploymentPref } from '../
 
 const WHATSAPP_NUMBER = '966566817575';
 
-// Splits a label like "هيئة الزكاة والضريبة والجمارك (ZATCA)" so the Latin
-// abbreviation renders isolated with <bdi>, avoiding RTL/LTR mix-up issues.
-function renderChipLabel(opt: string) {
-  const parts = opt.split(/(\([A-Za-z0-9\s]+\))/g).filter(Boolean);
-  if (parts.length === 1) return opt;
-  return parts.map((part, i) =>
-    /^\([A-Za-z0-9\s]+\)$/.test(part) ? (
-      <bdi key={i} style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>
-        {part}
-      </bdi>
-    ) : (
-      <span key={i}>{part}</span>
-    )
-  );
-}
-
 function ChipGroup({
   options,
   selected,
@@ -48,9 +32,9 @@ function ChipGroup({
                 ? 'border-transparent gradient-brand text-white shadow-md shadow-blue/20'
                 : 'border-line bg-white text-ink/70 hover:border-ink/30'
             }`}
-            style={{ direction: /^[A-Za-z0-9\s&–-]+$/.test(opt) ? 'ltr' : 'rtl' }}
+            style={{ direction: /[A-Za-z]/.test(opt) ? 'ltr' : 'rtl' }}
           >
-            {renderChipLabel(opt)}
+            {opt}
           </motion.button>
         );
       })}
@@ -114,7 +98,7 @@ export default function ContactForm() {
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Contact Us</span>
           <h2 className="mt-3 text-3xl lg:text-4xl font-bold text-ink">لنبني ما تحتاجه منشأتك</h2>
           <p className="mt-4 text-muted leading-relaxed">
-            سواء كنت تبحث عن نظام موارد بشرية، أو مالي، أو نقاط بيع، أو حل مخصص، نبدأ بفهم احتياجك.
+            سواء كنت تبحث عن نظام موارد بشرية، أو نظام حسابات مالية، أو الاثنين معًا، نبدأ بفهم احتياجك.
           </p>
         </Reveal>
 

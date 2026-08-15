@@ -1,8 +1,14 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Reveal, { RevealStagger, staggerItemScale } from './Reveal';
 import { products } from '../data/content';
 import { iconMap } from '../lib/icons';
+
+const productHref: Record<string, string> = {
+  hr: '/hr',
+  finance: '/finance',
+};
 
 export default function ProductsGrid() {
   return (
@@ -10,13 +16,13 @@ export default function ProductsGrid() {
       <div className="mx-auto max-w-7xl px-4">
         <Reveal className="mx-auto max-w-2xl text-center" variant="blurUp">
           <span className="text-xs font-semibold uppercase tracking-widest text-teal">Our Products</span>
-          <h2 className="mt-3 text-3xl lg:text-4xl font-bold text-ink">حلول تقنية لكل جانب من أعمالك</h2>
+          <h2 className="mt-3 text-3xl lg:text-4xl font-bold text-ink">نظاما ميم: الموارد البشرية والحسابات المالية</h2>
           <p className="mt-4 text-muted leading-relaxed">
-            اختر الحل المناسب لاحتياج منشأتك، أو اجمع أكثر من حل للحصول على منظومة أعمال متكاملة.
+            اختر النظام المناسب لاحتياج منشأتك، أو اجمعهما معًا للحصول على منظومة أعمال متكاملة.
           </p>
         </Reveal>
 
-        <RevealStagger className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={0.09}>
+        <RevealStagger className="mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2" stagger={0.09}>
           {products.map((p) => {
             const Icon = iconMap[p.icon];
             return (
@@ -62,13 +68,13 @@ export default function ProductsGrid() {
                   ))}
                 </div>
 
-                <a
-                  href="#contact"
+                <Link
+                  to={productHref[p.key] ?? '/#contact'}
                   className="relative z-10 mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink transition-colors group-hover:text-teal"
                 >
                   استكشف الحل
                   <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
-                </a>
+                </Link>
               </motion.div>
             );
           })}

@@ -1,8 +1,11 @@
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 import Reveal from './Reveal';
 import { industries } from '../data/content';
 
 export default function Industries() {
   const loop = [...industries, ...industries];
+  const [paused, setPaused] = useState(false);
 
   return (
     <section className="relative py-20 bg-ink overflow-hidden">
@@ -14,47 +17,31 @@ export default function Industries() {
       </div>
 
       <div
-        className="industries-marquee-mask relative mt-12 overflow-hidden"
+        className="relative mt-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
         dir="ltr"
       >
-        <div className="industries-marquee-track flex w-max gap-4">
+        <motion.div
+          className="flex w-max gap-4"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+          style={{ animationPlayState: paused ? 'paused' : 'running' }}
+          whileHover={{ transition: { duration: 0 } }}
+        >
           {loop.map((ind, i) => (
-            <span
+            <motion.span
               key={i}
               dir="rtl"
-              className="industries-chip whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white/80 transition-colors duration-200"
+              onHoverStart={() => setPaused(true)}
+              onHoverEnd={() => setPaused(false)}
+              whileHover={{ scale: 1.08, backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(20,184,166,0.5)' }}
+              transition={{ duration: 0.2 }}
+              className="whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white/80"
             >
               {ind}
-            </span>
+            </motion.span>
           ))}
-        </div>
+        </motion.div>
       </div>
-
-      <style>{`
-        .industries-marquee-mask {
-          -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-          mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-        }
-        .industries-marquee-track {
-          animation: industries-scroll 28s linear infinite;
-          will-change: transform;
-        }
-        .industries-marquee-mask:hover .industries-marquee-track {
-          animation-play-state: paused;
-        }
-        .industries-chip:hover {
-          transform: scale(1.08);
-          background-color: rgba(255, 255, 255, 0.1);
-          border-color: rgba(20, 184, 166, 0.5);
-        }
-        @keyframes industries-scroll {
-          from { transform: translateX(0%); }
-          to { transform: translateX(-50%); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .industries-marquee-track { animation: none; }
-        }
-      `}</style>
     </section>
   );
 }
