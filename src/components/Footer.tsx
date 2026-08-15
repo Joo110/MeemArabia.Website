@@ -1,7 +1,7 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion} from 'framer-motion';
 import { Mail, Globe } from 'lucide-react';
 import Logo from './Logo';
-import Reveal, { magneticProps } from './Reveal';
+import Reveal from './Reveal';
 
 const companyLinks = [
   { label: 'من نحن', href: '#why' },
@@ -89,36 +89,10 @@ function ContactCol() {
 }
 
 export default function Footer() {
-  const reduceMotion = useReducedMotion();
 
   return (
     <footer className="relative overflow-hidden bg-[radial-gradient(120%_140%_at_15%_0%,#232a5c_0%,#171b3c_38%,#0c0e22_100%)]">
-      {/* CTA row */}
-      <div className="relative border-b border-white/10">
-        <Reveal
-          className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-4 py-10 text-center sm:flex-row sm:justify-between sm:py-14 sm:text-right"
-          variant="fade"
-          amount={0.2}
-        >
-          <motion.a
-            href="#contact"
-            {...(!reduceMotion ? magneticProps(5) : {})}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
-            className="order-2 inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm"
-          >
-            تواصل معنا
-          </motion.a>
-          <div className="order-1">
-            <h3 className="text-xl font-bold leading-snug text-white sm:text-2xl">
-              هل أنت مستعد لبناء شيء رائع؟
-            </h3>
-            <p className="mt-2 text-[13.5px] text-white/60">
-              انضم لمنشآت تنمو وتدير أعمالها بذكاء مع ميم العربية.
-            </p>
-          </div>
-        </Reveal>
-      </div>
+     
 
       {/* link columns */}
       <div className="relative mx-auto max-w-7xl px-4 py-12 sm:py-16">
