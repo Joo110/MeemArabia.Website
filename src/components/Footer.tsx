@@ -14,9 +14,6 @@ const companyLinks = [
 const solutionLinks = [
   { label: 'الموارد البشرية', href: '#hr' },
   { label: 'المالية والمحاسبة', href: '#products' },
-  { label: 'إدارة الأعمال', href: '#products' },
-  { label: 'نقاط البيع', href: '#products' },
-  { label: 'التطوير المخصص', href: '#contact' },
   { label: 'تكامل الأنظمة', href: '#integrations' },
 ];
 
